@@ -1,6 +1,6 @@
 # twintone.ai
 
-Static site for [www.twintone.ai](https://www.twintone.ai) — the TwinTone AI marketing website, deployed on Vercel.
+Website for [www.twintone.ai](https://www.twintone.ai) — the TwinTone AI marketing website, deployed on Vercel.
 
 ## Overview
 
