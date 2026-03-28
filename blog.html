@@ -1510,6 +1510,108 @@
 <!-- SnippetEnd: legacy-headEnd -->
 
     <!-- End of headEnd -->
+
+<style data-custom-fix>
+/* Fix 1: Framer animation initial states */
+[data-framer-component-type="RichTextContainer"] span[style*="opacity:0.001"] {
+  opacity: 1 !important; filter: none !important; transform: none !important;
+}
+/* Fix 2: Desktop hero text above video */
+@media (min-width: 1440px) {
+  .framer-6y1f4 .framer-1mnax0y { z-index: 10 !important; }
+}
+/* Fix 3: Tablet — keep video as background not stacked */
+@media (min-width: 810px) and (max-width: 1439.98px) {
+  .framer-6y1f4 .framer-wkznbu-container {
+    position: absolute !important; top: 0 !important; left: 0 !important;
+    width: 100% !important; height: 100% !important; max-height: 620px;
+  }
+  .framer-6y1f4 .framer-1mnax0y { z-index: 10 !important; padding-top: 260px !important; }
+  .framer-6y1f4 .framer-93uc5v { min-height: 600px !important; }
+}
+/* Fix 4: Text readability scrim over video */
+@media (min-width: 810px) {
+  .framer-6y1f4 .framer-1mnax0y::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse 70% 50% at 50% 60%, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0) 100%);
+    z-index: -1; pointer-events: none;
+  }
+}
+/* Fix 5: Mobile overflow */
+.framer-6y1f4 .framer-1tn9r0y, .framer-6y1f4 .framer-1rngr3p-container { overflow: hidden !important; }
+</style>
+
+<style data-responsive-fix>
+/* ============================================
+   RESPONSIVE FIX: Framer clones lock to fixed
+   breakpoint widths. This makes everything
+   fluid between breakpoints.
+   ============================================ */
+
+/* 1. Make the root Framer container fluid */
+.framer-6y1f4,
+.framer-6y1f4.framer-vvbh62,
+.framer-6y1f4.framer-BoGdN {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+
+/* At tablet Framer locks to 810px — allow it to scale up */
+@media (min-width: 810px) and (max-width: 1439.98px) {
+  .framer-6y1f4.framer-vvbh62 {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+}
+
+/* 2. All images: scale within their containers */
+img {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* 3. Videos: always fill their container width */
+video {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* 4. Prevent any element from causing horizontal overflow */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
+/* 5. Framer sections that use 100% width — ensure they stay full width */
+[class*="framer-"] {
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+/* Exception: don't constrain absolutely positioned or fixed elements */
+[class*="framer-"][style*="position:absolute"],
+[class*="framer-"][style*="position: absolute"],
+[class*="framer-"][style*="position:fixed"],
+[class*="framer-"][style*="position: fixed"] {
+  max-width: none !important;
+}
+
+/* 6. Navbars and full-bleed sections stay full width */
+.framer-6y1f4 nav,
+.framer-6y1f4 [data-framer-name="nav"],
+.framer-6y1f4 [data-framer-name="Navigation"] {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* 7. Inner content containers — cap at 1440px and center */
+.framer-6y1f4 .framer-1p1u6k,
+.framer-6y1f4 .framer-1sijel3 {
+  max-width: 1440px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+</style>
 </head>
 <body>
 	<script async src="https://events.framer.com/script?v=2" data-fid="0d23bca804d5efd5fcc12abf94a4a0a04991830f954344e83ec7376aff670673" data-no-nt></script>
