@@ -1,5 +1,7 @@
 # twintone.ai
 
+[![Deployed on Vercel](https://img.shields.io/badge/Vercel-deployed-black.svg)](https://www.twintone.ai) ![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)
+
 Website for [www.twintone.ai](https://www.twintone.ai) — the TwinTone AI marketing website, deployed on Vercel.
 
 ## Overview
@@ -99,3 +101,7 @@ To point `www.twintone.ai` to this Vercel deployment:
 
 - **App:** [app.twintone.ai](https://app.twintone.ai) — separate React/Vite deployment, do not touch
 - **Linear:** [TWI2-302](https://linear.app/twintone/issue/TWI2-302) — migration tracking issue
+
+---
+
+<p align="center">Built by <a href="https://www.twintone.ai">TwinTone AI</a></p>
