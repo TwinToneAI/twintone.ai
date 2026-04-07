@@ -1,0 +1,2 @@
+import{t as e}from"./rolldown-runtime.DRQEZ5FH.mjs";function t(e,t){return{description:`Create AI-powered UGC video ads in 30 seconds. Choose from 2,000+ real creator AI twins, generate product-in-hand videos, and scale content 10x. Trusted by 1,000+ brands.`,favicon:`https://framerusercontent.com/assets/a2iPk7kMeVilv6Uuq2fZ8bV0g.png`,robots:`max-image-preview:large`,socialImage:`https://framerusercontent.com/assets/0L4Fc5cyfAtrp95NxLLeoMoDOaw.png`,title:`TwinTone AI`}}var n=e((()=>{}));export{t as n,n as t};
+//# sourceMappingURL=siteMetadata.CI1e-pX1.mjs.map
