@@ -6,7 +6,7 @@
 	<meta charset="utf-8">
 	
 	
-	
+	<script>try{if(localStorage.get("__framer_force_showing_editorbar_since")){const n=document.createElement("link");n.rel = "modulepreload";n.href="https://framer.com/edit/init.mjs";document.head.appendChild(n)}}catch(e){}</script>
 	<!-- Start of headStart -->
     <!-- Snippet: OeQBpmPZ8 -->
 
@@ -1632,29 +1632,6 @@ html, body {
   margin-right: auto !important;
 }
 </style>
-<style data-twintone-animations>
-/* Brand logo ticker marquee animation */
-@keyframes tt-ticker-scroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-/* Scroll reveal animations */
-@keyframes tt-fade-in-up {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.tt-ticker-animate {
-  animation: tt-ticker-scroll 20s linear infinite;
-  display: flex !important;
-  width: max-content;
-}
-
-.tt-revealed {
-  animation: tt-fade-in-up 0.6s ease-out forwards;
-}
-</style>
 </head>
 <body>
 	<script async src="https://events.framer.com/script?v=2" data-fid="0d23bca804d5efd5fcc12abf94a4a0a04991830f954344e83ec7376aff670673" data-no-nt></script>
@@ -1670,7 +1647,7 @@ html, body {
 	
 	<script data-framer-appear-animation="no-preference"></script>
 	<script>typeof document<"u"&&(window.process={...window.process,env:{...window.process?.env,NODE_ENV:"production"}});</script>
-	
+	<link rel="modulepreload" fetchpriority="low" href="../assets/react.CUQQQSZW.mjs"><link rel="modulepreload" fetchpriority="low" href="../assets/rolldown-runtime.DRQEZ5FH.mjs"><link rel="modulepreload" fetchpriority="low" href="../assets/framer.VLaXjiyp.mjs"><link rel="modulepreload" fetchpriority="low" href="../assets/motion.DeWYLIxS.mjs"><script type="module" async data-framer-bundle="main" fetchPriority="low" src="../assets/script_main.BFy4kDEu.mjs"></script>
 	<!-- Start of bodyEnd -->
     <!-- Snippet: SX5lcdX2D -->
 
@@ -1685,166 +1662,5 @@ html, body {
   window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script>
-(function(){
-  // Ticker/Marquee animation for brand logos
-  function initTickers() {
-    // Find horizontal overflow containers with many images (logo tickers)
-    var containers = document.querySelectorAll('[style*="overflow: hidden"], [style*="overflow:hidden"]');
-    containers.forEach(function(container) {
-      var inner = container.firstElementChild;
-      if (!inner) return;
-      var imgs = inner.querySelectorAll('img');
-      if (imgs.length < 4) return;
-      // Check if it looks like a horizontal ticker (wider content than container)
-      var cRect = container.getBoundingClientRect();
-      var iRect = inner.getBoundingClientRect();
-      if (cRect.width < 100) return;
-      // Duplicate children for seamless loop
-      var html = inner.innerHTML;
-      inner.innerHTML = html + html;
-      inner.classList.add('tt-ticker-animate');
-    });
-  }
-
-  // Scroll reveal for sections below the fold
-  function initScrollReveal() {
-    if (!('IntersectionObserver' in window)) return;
-    var sections = document.querySelectorAll('[data-framer-name="Card Container"], [data-framer-name="Card"], [data-framer-name="Container"]');
-    // Also target major content sections
-    var allSections = document.querySelectorAll('section, [data-framer-name]');
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('tt-revealed');
-          observer.unobserve(entry.target);
-        }
-      });
-    }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
-    
-    allSections.forEach(function(el) {
-      var rect = el.getBoundingClientRect();
-      if (rect.top > window.innerHeight && rect.height > 50 && rect.width > 200) {
-        el.style.opacity = '0';
-        observer.observe(el);
-      }
-    });
-  }
-
-  function init() {
-    initTickers();
-    // Delay scroll reveal to let layout settle
-    setTimeout(initScrollReveal, 500);
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-})();
-</script>
-<script>
-(function(){
-  // Video autoplay handler v2 - scroll-based (IntersectionObserver fails on Framer layouts)
-  var playing = new Set();
-  var loaded = new Set();
-  var maxConcurrent = 3;
-  var loading = 0;
-
-  function isVisible(el) {
-    var style = window.getComputedStyle(el);
-    if (style.display === 'none' || style.visibility === 'hidden') return false;
-    var p = el.parentElement;
-    while (p && p !== document.body) {
-      var ps = window.getComputedStyle(p);
-      if (ps.display === 'none' || ps.visibility === 'hidden') return false;
-      p = p.parentElement;
-    }
-    return true;
-  }
-
-  function inViewport(el) {
-    var rect = el.getBoundingClientRect();
-    // Use the element itself or walk up to find a sized ancestor
-    if (rect.width === 0 && rect.height === 0) {
-      var p = el.parentElement;
-      while (p && p !== document.body) {
-        rect = p.getBoundingClientRect();
-        if (rect.width > 0 && rect.height > 0) break;
-        p = p.parentElement;
-      }
-    }
-    if (rect.width === 0 && rect.height === 0) return false;
-    var margin = 300;
-    return rect.bottom > -margin && rect.top < (window.innerHeight + margin);
-  }
-
-  function checkVideos() {
-    var videos = document.querySelectorAll('video[loop][muted]');
-    videos.forEach(function(v) {
-      if (!isVisible(v)) return;
-      var visible = inViewport(v);
-      if (visible && v.paused) {
-        if (!loaded.has(v.src) && loading >= maxConcurrent) return;
-        if (!loaded.has(v.src)) {
-          loading++;
-          v.preload = 'auto';
-          v.addEventListener('canplay', function onCanPlay() {
-            v.removeEventListener('canplay', onCanPlay);
-            loaded.add(v.src);
-            loading--;
-            v.play().catch(function(){});
-          }, {once: true});
-          v.load();
-        } else {
-          v.play().catch(function(){});
-        }
-      } else if (!visible && !v.paused) {
-        v.pause();
-      }
-    });
-  }
-
-  // Eager-load above-fold images
-  function initImages() {
-    var imgs = document.querySelectorAll('img[loading="lazy"]');
-    imgs.forEach(function(img) {
-      if (!img.complete && img.getBoundingClientRect().top < window.innerHeight * 2) {
-        img.loading = 'eager';
-      }
-    });
-  }
-
-  // Throttled scroll handler
-  var ticking = false;
-  function onScroll() {
-    if (!ticking) {
-      ticking = true;
-      requestAnimationFrame(function() {
-        checkVideos();
-        ticking = false;
-      });
-    }
-  }
-
-  function init() {
-    initImages();
-    // Initial check with slight delays to let layout settle
-    checkVideos();
-    setTimeout(checkVideos, 500);
-    setTimeout(checkVideos, 1500);
-    setTimeout(checkVideos, 3000);
-    window.addEventListener('scroll', onScroll, {passive: true});
-    window.addEventListener('resize', onScroll, {passive: true});
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    init();
-  }
-})();
-</script>
 </body>
 </html>
