@@ -1727,74 +1727,103 @@ html, body {
 <script defer src="/_vercel/speed-insights/script.js"></script>
 <script>
 (function(){
-  // Video autoplay handler - replaces Framer hydration for video playback
-  function initVideos(){
+  // Video autoplay handler v2 - scroll-based (IntersectionObserver fails on Framer layouts)
+  var playing = new Set();
+  var loaded = new Set();
+  var maxConcurrent = 3;
+  var loading = 0;
+
+  function isVisible(el) {
+    var style = window.getComputedStyle(el);
+    if (style.display === 'none' || style.visibility === 'hidden') return false;
+    var p = el.parentElement;
+    while (p && p !== document.body) {
+      var ps = window.getComputedStyle(p);
+      if (ps.display === 'none' || ps.visibility === 'hidden') return false;
+      p = p.parentElement;
+    }
+    return true;
+  }
+
+  function inViewport(el) {
+    var rect = el.getBoundingClientRect();
+    // Use the element itself or walk up to find a sized ancestor
+    if (rect.width === 0 && rect.height === 0) {
+      var p = el.parentElement;
+      while (p && p !== document.body) {
+        rect = p.getBoundingClientRect();
+        if (rect.width > 0 && rect.height > 0) break;
+        p = p.parentElement;
+      }
+    }
+    if (rect.width === 0 && rect.height === 0) return false;
+    var margin = 300;
+    return rect.bottom > -margin && rect.top < (window.innerHeight + margin);
+  }
+
+  function checkVideos() {
     var videos = document.querySelectorAll('video[loop][muted]');
-    if(!videos.length) return;
-    
-    // Check if IntersectionObserver is available
-    if('IntersectionObserver' in window){
-      var observer = new IntersectionObserver(function(entries){
-        entries.forEach(function(entry){
-          var v = entry.target;
-          if(entry.isIntersecting && entry.intersectionRatio > 0){
-            if(v.paused){
-              v.preload = 'auto';
-              v.load();
-              v.play().catch(function(){});
-            }
-          } else {
-            if(!v.paused) v.pause();
-          }
-        });
-      }, {rootMargin: '200px 0px', threshold: 0.01});
-      
-      videos.forEach(function(v){
-        // Skip hidden videos (other breakpoints)
-        var style = window.getComputedStyle(v.parentElement);
-        if(style.display === 'none') return;
-        observer.observe(v);
-      });
-      
-      // Re-check on resize (breakpoint changes)
-      var resizeTimer;
-      window.addEventListener('resize', function(){
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(function(){
-          videos.forEach(function(v){
-            observer.unobserve(v);
-            var style = window.getComputedStyle(v.parentElement);
-            if(style.display !== 'none') observer.observe(v);
-          });
-        }, 300);
-      });
-    } else {
-      // Fallback: just autoplay visible videos
-      videos.forEach(function(v){
-        var style = window.getComputedStyle(v.parentElement);
-        if(style.display !== 'none'){
+    videos.forEach(function(v) {
+      if (!isVisible(v)) return;
+      var visible = inViewport(v);
+      if (visible && v.paused) {
+        if (!loaded.has(v.src) && loading >= maxConcurrent) return;
+        if (!loaded.has(v.src)) {
+          loading++;
           v.preload = 'auto';
+          v.addEventListener('canplay', function onCanPlay() {
+            v.removeEventListener('canplay', onCanPlay);
+            loaded.add(v.src);
+            loading--;
+            v.play().catch(function(){});
+          }, {once: true});
           v.load();
+        } else {
           v.play().catch(function(){});
         }
-      });
-    }
+      } else if (!visible && !v.paused) {
+        v.pause();
+      }
+    });
   }
-  
-  // Also handle lazy images that might not load
-  function initImages(){
+
+  // Eager-load above-fold images
+  function initImages() {
     var imgs = document.querySelectorAll('img[loading="lazy"]');
-    imgs.forEach(function(img){
-      if(!img.complete && img.getBoundingClientRect().top < window.innerHeight * 2){
+    imgs.forEach(function(img) {
+      if (!img.complete && img.getBoundingClientRect().top < window.innerHeight * 2) {
         img.loading = 'eager';
       }
     });
   }
-  
-  if(document.readyState === 'loading'){
-    document.addEventListener('DOMContentLoaded', function(){ initVideos(); initImages(); });
+
+  // Throttled scroll handler
+  var ticking = false;
+  function onScroll() {
+    if (!ticking) {
+      ticking = true;
+      requestAnimationFrame(function() {
+        checkVideos();
+        ticking = false;
+      });
+    }
+  }
+
+  function init() {
+    initImages();
+    // Initial check with slight delays to let layout settle
+    checkVideos();
+    setTimeout(checkVideos, 500);
+    setTimeout(checkVideos, 1500);
+    setTimeout(checkVideos, 3000);
+    window.addEventListener('scroll', onScroll, {passive: true});
+    window.addEventListener('resize', onScroll, {passive: true});
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
   } else {
-    initVideos(); initImages();
+    init();
   }
 })();
 </script>
