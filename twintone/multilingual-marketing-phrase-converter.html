@@ -1662,5 +1662,78 @@ html, body {
   window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
-<script>(function(){var vids=[],q=[],ld=0,MX=2,vh=window.innerHeight;function inView(v){var r=v.getBoundingClientRect();if(r.width===0&&r.height===0){var p=v;while(p&&p!==document.body){var pr=p.getBoundingClientRect();if(pr.width>0&&pr.height>0){r=pr;break}p=p.parentElement}}return r.top<vh+600&&r.bottom>-600}function nearView(v){var r=v.getBoundingClientRect();if(r.width===0&&r.height===0){var p=v;while(p&&p!==document.body){var pr=p.getBoundingClientRect();if(pr.width>0&&pr.height>0){r=pr;break}p=p.parentElement}}return r.top<vh&&r.bottom>0}function nx(){while(q.length&&ld<MX){var v=q.shift();v.preload="auto";v.load();ld++;v._queued=false;v.addEventListener("canplay",function(){this._ready=true;ld--;nx();ck()},{once:true});v.addEventListener("error",function(){ld--;nx()},{once:true})}}function ck(){vids.forEach(function(v){if(inView(v)&&!v._queued&&!v._ready&&v.readyState<1){v._queued=true;q.push(v);nx()}if(nearView(v)&&v._ready&&v.paused){v.play().catch(function(){})}else if(!nearView(v)&&!v.paused){v.pause()}})}document.querySelectorAll("video").forEach(function(v){v.removeAttribute("autoplay");v.preload="none";vids.push(v)});window.addEventListener("scroll",ck,{passive:true});window.addEventListener("resize",function(){vh=window.innerHeight;ck()});ck();setTimeout(ck,500);setTimeout(ck,2000)})();</script></body>
+<script>
+(function(){
+  // Video autoplay handler - replaces Framer hydration for video playback
+  function initVideos(){
+    var videos = document.querySelectorAll('video[loop][muted]');
+    if(!videos.length) return;
+    
+    // Check if IntersectionObserver is available
+    if('IntersectionObserver' in window){
+      var observer = new IntersectionObserver(function(entries){
+        entries.forEach(function(entry){
+          var v = entry.target;
+          if(entry.isIntersecting && entry.intersectionRatio > 0){
+            if(v.paused){
+              v.preload = 'auto';
+              v.load();
+              v.play().catch(function(){});
+            }
+          } else {
+            if(!v.paused) v.pause();
+          }
+        });
+      }, {rootMargin: '200px 0px', threshold: 0.01});
+      
+      videos.forEach(function(v){
+        // Skip hidden videos (other breakpoints)
+        var style = window.getComputedStyle(v.parentElement);
+        if(style.display === 'none') return;
+        observer.observe(v);
+      });
+      
+      // Re-check on resize (breakpoint changes)
+      var resizeTimer;
+      window.addEventListener('resize', function(){
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(function(){
+          videos.forEach(function(v){
+            observer.unobserve(v);
+            var style = window.getComputedStyle(v.parentElement);
+            if(style.display !== 'none') observer.observe(v);
+          });
+        }, 300);
+      });
+    } else {
+      // Fallback: just autoplay visible videos
+      videos.forEach(function(v){
+        var style = window.getComputedStyle(v.parentElement);
+        if(style.display !== 'none'){
+          v.preload = 'auto';
+          v.load();
+          v.play().catch(function(){});
+        }
+      });
+    }
+  }
+  
+  // Also handle lazy images that might not load
+  function initImages(){
+    var imgs = document.querySelectorAll('img[loading="lazy"]');
+    imgs.forEach(function(img){
+      if(!img.complete && img.getBoundingClientRect().top < window.innerHeight * 2){
+        img.loading = 'eager';
+      }
+    });
+  }
+  
+  if(document.readyState === 'loading'){
+    document.addEventListener('DOMContentLoaded', function(){ initVideos(); initImages(); });
+  } else {
+    initVideos(); initImages();
+  }
+})();
+</script>
+</body>
 </html>
