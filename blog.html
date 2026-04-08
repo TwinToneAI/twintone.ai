@@ -1612,6 +1612,29 @@ html, body {
   margin-right: auto !important;
 }
 </style>
+<style data-twintone-animations>
+/* Brand logo ticker marquee animation */
+@keyframes tt-ticker-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* Scroll reveal animations */
+@keyframes tt-fade-in-up {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.tt-ticker-animate {
+  animation: tt-ticker-scroll 20s linear infinite;
+  display: flex !important;
+  width: max-content;
+}
+
+.tt-revealed {
+  animation: tt-fade-in-up 0.6s ease-out forwards;
+}
+</style>
 </head>
 <body>
 	<script async src="https://events.framer.com/script?v=2" data-fid="0d23bca804d5efd5fcc12abf94a4a0a04991830f954344e83ec7376aff670673" data-no-nt></script>
@@ -1642,6 +1665,65 @@ html, body {
   window.si = window.si || function () { (window.siq = window.siq || []).push(arguments); };
 </script>
 <script defer src="/_vercel/speed-insights/script.js"></script>
+<script>
+(function(){
+  // Ticker/Marquee animation for brand logos
+  function initTickers() {
+    // Find horizontal overflow containers with many images (logo tickers)
+    var containers = document.querySelectorAll('[style*="overflow: hidden"], [style*="overflow:hidden"]');
+    containers.forEach(function(container) {
+      var inner = container.firstElementChild;
+      if (!inner) return;
+      var imgs = inner.querySelectorAll('img');
+      if (imgs.length < 4) return;
+      // Check if it looks like a horizontal ticker (wider content than container)
+      var cRect = container.getBoundingClientRect();
+      var iRect = inner.getBoundingClientRect();
+      if (cRect.width < 100) return;
+      // Duplicate children for seamless loop
+      var html = inner.innerHTML;
+      inner.innerHTML = html + html;
+      inner.classList.add('tt-ticker-animate');
+    });
+  }
+
+  // Scroll reveal for sections below the fold
+  function initScrollReveal() {
+    if (!('IntersectionObserver' in window)) return;
+    var sections = document.querySelectorAll('[data-framer-name="Card Container"], [data-framer-name="Card"], [data-framer-name="Container"]');
+    // Also target major content sections
+    var allSections = document.querySelectorAll('section, [data-framer-name]');
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('tt-revealed');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, {threshold: 0.1, rootMargin: '0px 0px -50px 0px'});
+    
+    allSections.forEach(function(el) {
+      var rect = el.getBoundingClientRect();
+      if (rect.top > window.innerHeight && rect.height > 50 && rect.width > 200) {
+        el.style.opacity = '0';
+        observer.observe(el);
+      }
+    });
+  }
+
+  function init() {
+    initTickers();
+    // Delay scroll reveal to let layout settle
+    setTimeout(initScrollReveal, 500);
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
+</script>
 <script>
 (function(){
   // Video autoplay handler v2 - scroll-based (IntersectionObserver fails on Framer layouts)
