@@ -1,4 +1,4 @@
-import { Dices, ShoppingBag, Hotel, Radio, Brain, Globe2 } from "lucide-react";
+import { Dices, ShoppingBag, Radio, Brain, Globe2 } from "lucide-react";
 import type { ComponentType, SVGProps } from "react";
 
 type Feature = {
@@ -22,13 +22,6 @@ const verticals: Feature[] = [
     description:
       "AI hosts that pitch products, answer questions, and run 24/7 across TikTok Shop, Instagram Live, and YouTube — without burning out creators.",
     meta: "TikTok Shop · IG Live · Whatnot",
-  },
-  {
-    icon: Hotel,
-    title: "Hospitality",
-    description:
-      "Photoreal concierge avatars that handle guest questions, upsell amenities, and run on-property experiences in any language.",
-    meta: "On-property · Web · App",
   },
 ];
 
@@ -60,9 +53,9 @@ export function Features() {
       className="relative border-b border-border/60 bg-background"
     >
       <div className="mx-auto max-w-7xl px-6 py-24 md:py-32">
-        <SectionLabel kicker="Built for live audiences" title="Three verticals. One platform." />
+        <SectionLabel kicker="Built for live audiences" title="Two verticals. One platform." />
 
-        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/80 bg-border/80 md:grid-cols-3">
+        <div className="mt-12 grid gap-px overflow-hidden rounded-2xl border border-border/80 bg-border/80 md:grid-cols-2">
           {verticals.map((feat) => (
             <FeatureCard key={feat.title} {...feat} />
           ))}

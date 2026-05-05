@@ -19,11 +19,11 @@ export const metadata: Metadata = {
     template: "%s · TwinTone",
   },
   description:
-    "Always-on AI streamers for iGaming, social commerce, and hospitality. Photoreal hosts, real-time chat, multi-platform delivery.",
+    "Always-on AI streamers for iGaming and social commerce. Photoreal hosts, real-time chat, multi-platform delivery.",
   openGraph: {
     title: "TwinTone — Live streaming intelligence.",
     description:
-      "Always-on AI streamers for iGaming, social commerce, and hospitality.",
+      "Always-on AI streamers for iGaming and social commerce.",
     url: "https://www.twintone.ai",
     siteName: "TwinTone",
     type: "website",
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "TwinTone — Live streaming intelligence.",
     description:
-      "Always-on AI streamers for iGaming, social commerce, and hospitality.",
+      "Always-on AI streamers for iGaming and social commerce.",
   },
 };
 

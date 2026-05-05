@@ -26,8 +26,8 @@ export function Hero() {
 
         <p className="mt-7 max-w-2xl text-balance text-lg text-muted-fg md:text-xl">
           Always-on AI streamers that host live broadcasts, react to chat in
-          real time, and ship 24/7 across iGaming, social commerce, and
-          hospitality. One avatar. Every channel. Zero downtime.
+          real time, and ship 24/7 across iGaming and social commerce. One
+          avatar. Every channel. Zero downtime.
         </p>
 
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row">

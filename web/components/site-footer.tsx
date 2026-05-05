@@ -34,8 +34,8 @@ export function SiteFooter() {
         <div className="flex flex-col gap-4 md:max-w-sm">
           <TwinToneMark />
           <p className="text-sm text-muted-fg">
-            Live streaming intelligence. Always-on AI streamers for iGaming,
-            social commerce, and hospitality.
+            Live streaming intelligence. Always-on AI streamers for iGaming
+            and social commerce.
           </p>
         </div>
 
@@ -64,9 +64,9 @@ export function SiteFooter() {
 
       <div className="border-t border-border/60">
         <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-2 px-6 py-6 text-xs text-muted-fg sm:flex-row sm:items-center">
-          <p>© {new Date().getFullYear()} TwinTone AI Pty Ltd</p>
+          <p>© {new Date().getFullYear()} TwinTone AI</p>
           <p className="font-mono uppercase tracking-wider">
-            Built in Sydney · Streaming worldwide
+            San Francisco · Streaming worldwide
           </p>
         </div>
       </div>
